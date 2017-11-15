@@ -1,0 +1,56 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
+
+public class TriggerDetect : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+
+                
+
+	}
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            //StartCoroutine(CoFlickerBuilding());
+            //Destroy(gameObject, 2);
+            var audioSource = GetComponent<AudioSource>();
+            audioSource.volume = 1;
+            audioSource.Play();
+            StartCoroutine(CoFadeMusic());
+        }
+    }
+
+    IEnumerator CoFadeMusic()
+    {
+        var audioSource = GetComponent<AudioSource>();
+        for (int i=0;i<20;i++)
+        {
+            audioSource.volume -= 0.05f;
+            yield return new WaitForSeconds(.5f);
+        }
+    }
+
+    IEnumerator CoFlickerBuilding()
+    {
+        var renderer = GetComponent<MeshRenderer>();
+        for (int i = 0; i < 10; i++)
+        {
+            renderer.enabled = false;
+            yield return new WaitForSeconds(.2f);
+            renderer.enabled = true;
+            yield return new WaitForSeconds(.2f);
+        }
+        Destroy(gameObject);
+    }
